@@ -6,6 +6,7 @@ import http.RequestHeader;
 import http.RequestLine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import servlet.DefaultServlet;
 import servlet.Hello;
 import servlet.SimpleServlet;
 import utils.IOUtils;
@@ -24,32 +25,30 @@ public class RequestHandler implements Runnable {
     }
 
     public void run() {
-        logger.debug("New Client Connect! Connected IP : {}, Port : {}", connection.getInetAddress(), connection.getPort());
+        //logger.debug("New Client Connect! Connected IP : {}, Port : {}", connection.getInetAddress(), connection.getPort());
 
-        try (InputStream in = connection.getInputStream();
-             OutputStream out = connection.getOutputStream()) {
+        try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in));
 
             RequestLine requestLine = RequestLine.parse(bufferedReader.readLine());
             RequestHeader requestHeader = RequestHeader.parse(bufferedReader);
-            String requestBody = null;
-            if (requestLine.isPost()) {
-                requestBody = IOUtils.readData(bufferedReader, requestHeader.getContentLength());
-            }
 
-            HttpRequest httpRequest = new HttpRequest(requestLine, requestHeader, requestBody);
+            HttpRequest httpRequest = new HttpRequest(requestLine, requestHeader);
             HttpResponse httpResponse = new HttpResponse(new DataOutputStream(out));
             SimpleServlet servlet;
 
+            logger.debug("httpRequest.getPath() : " + httpRequest.getPath());
+
+
             switch (httpRequest.getPath()){
-                case "hello" :
+                case "/Hello" :
                     servlet = new Hello();
                     break;
-                case "service.hello":
+                case "/service.Hello":
                     servlet = new servlet.service.Hello();
                     break;
                 default:
-                    servlet = new Hello();
+                    servlet = new DefaultServlet();
                     break;
             }
 
