@@ -1,18 +1,23 @@
-package servlet.service;
+package servlet;
 
 import http.HttpRequest;
 import http.HttpResponse;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import servlet.SimpleServlet;
-import webserver.RequestHandler;
 
-public class Hello implements SimpleServlet {
-  private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
+public class CurrentDateServlet implements SimpleServlet{
+  private static Logger logger = LoggerFactory.getLogger(CurrentDateServlet.class);
 
   @Override
   public void service(HttpRequest httpRequest, HttpResponse httpResponse) {
-    logger.info("servlet/service/Hello CALL");
+    logger.info("servlet/CurrentDateServlet CALL");
+    logger.info("현재 시각은 " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS")) + "입니다.");
+
     if (httpRequest.isPost()) {
       doPost(httpRequest, httpResponse);
       return;

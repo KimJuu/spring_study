@@ -1,15 +1,10 @@
 package webserver;
 
 import config.Config;
-import org.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import utils.FileIoUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class WebServer {
 
@@ -19,7 +14,6 @@ public class WebServer {
   public static void main(String args[]) throws Exception {
     // 설정파일에서 port 정보 추출
     int PORT = Config.getPort();
-    logger.info("Config.getPort() : ", PORT);
 
     // 서버소켓을 생성한다.
     try (ServerSocket listenSocket = new ServerSocket(PORT)) {

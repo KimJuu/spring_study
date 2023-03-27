@@ -1,38 +1,25 @@
 package utils;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class FileIoUtils {
-
+  private static Logger logger = LoggerFactory.getLogger(FileIoUtils.class);
   public static byte[] loadFileFromClasspath(String filePath) throws IOException, URISyntaxException {
-    System.out.println(
-        "::::::::::::::: FileIoUtils.class.getClassLoader().getResource(filePath) :  "
-            + FileIoUtils.class.getClassLoader().getResource(filePath));
-    System.out.println(
-        "::::::::::::::: FileIoUtils.class.getClassLoader().getResource(filePath) :  " + filePath);
+    try {
+      logger.info("filePath : " + filePath);
+      InputStream resourceAsStream = FileIoUtils.class.getResourceAsStream(filePath);
+      return resourceAsStream.readAllBytes();
+    }catch (Exception e){
 
-    Path path = Paths.get(FileIoUtils.class.getClassLoader().getResource(filePath).toURI());
-    return Files.readAllBytes(path);
-  }
 
-  public static String UrlToFile(String url) {
-    String fileName = "";
-
-    switch (url) {
-      case "/Hello":
-        fileName = "hello.html";
-        break;
-      case "/service.Hello":
-        fileName = "serviceHello.html";
-        break;
-      default:
-        fileName = "index.html";
-        break;
     }
-    return fileName;
+    return null;
   }
 }

@@ -45,11 +45,15 @@ public class RequestHeader {
   public static RequestHeader parse(BufferedReader request) throws IOException {
     Map<String, String> attributes = parseAttributes(request);
 
-    return new RequestHeader(attributes.get(HOST_KEY), attributes.get(CONNECTION_KEY),
-        attributes.get(USER_AGENT_KEY), attributes.get(ACCEPT_KEY), attributes.get(REFERER_KEY),
-        attributes.get(ACCEPT_ENCODING_KEY), attributes.get(ACCEPT_LANGUAGE_KEY),
-        attributes.get(CONTENT_LENGTH_KEY) != null ? Integer
-            .parseInt(attributes.get(CONTENT_LENGTH_KEY)) : 0);
+    return new RequestHeader(
+        attributes.get(HOST_KEY),
+        attributes.get(CONNECTION_KEY),
+        attributes.get(USER_AGENT_KEY),
+        attributes.get(ACCEPT_KEY),
+        attributes.get(REFERER_KEY),
+        attributes.get(ACCEPT_ENCODING_KEY),
+        attributes.get(ACCEPT_LANGUAGE_KEY),
+        attributes.get(CONTENT_LENGTH_KEY) != null ? Integer.parseInt(attributes.get(CONTENT_LENGTH_KEY)) : 0);
   }
 
   private static Map<String, String> parseAttributes(BufferedReader request) throws IOException {

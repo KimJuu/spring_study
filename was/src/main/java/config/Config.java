@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 import org.slf4j.Logger;
@@ -28,13 +29,12 @@ public class Config {
 
   public static String getHttpRoot(String host) {
     JSONArray virtualHostsArr = (JSONArray) config.get("virtualHosts");
-    String httpRoot = "";
     for (int i = 0; i < virtualHostsArr.length(); i++) {
       if (host.equals(virtualHostsArr.getJSONObject(i).get("host"))) {
-        httpRoot = virtualHostsArr.getJSONObject(i).getString("httpRoot");
+        return virtualHostsArr.getJSONObject(i).getString("httpRoot");
       }
     }
-    return httpRoot;
+    return null;
   }
 
   public static int getPort() {
@@ -43,5 +43,13 @@ public class Config {
 
   public static String getErrorPage(String httpCode) {
     return config.getJSONObject("errorPages").getString(httpCode);
+  }
+
+  public static String getUrlToHtml(String url){
+    try {
+      return config.getJSONObject("returnPages").getString(url);
+    }catch (JSONException e){
+      return "404";
+    }
   }
 }
