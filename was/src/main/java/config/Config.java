@@ -14,18 +14,10 @@ import org.slf4j.LoggerFactory;
 import webserver.RequestHandler;
 
 public class Config {
-//  private static JSONObject config;
-//  static {
-//    try {
-//      config = new JSONObject(new String(Files.readAllBytes(Paths.get("./config.json"))));
-//    } catch (IOException e) {
-//      e.printStackTrace();
-//    }
-//  }
-
   private static InputStream configInputStream = Config.class.getClassLoader().getResourceAsStream("config.json");
   private static InputStreamReader configReader = new InputStreamReader(configInputStream);
   private static JSONObject config = new JSONObject(new JSONTokener(configReader));
+  private static Logger logger = LoggerFactory.getLogger(Config.class);
 
   public static String getHttpRoot(String host) {
     JSONArray virtualHostsArr = (JSONArray) config.get("virtualHosts");
@@ -49,6 +41,7 @@ public class Config {
     try {
       return config.getJSONObject("returnPages").getString(url);
     }catch (JSONException e){
+      logger.error("404 ERROR ", e);
       return "404";
     }
   }

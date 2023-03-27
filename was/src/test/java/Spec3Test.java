@@ -1,18 +1,11 @@
 import config.Config;
-import http.HttpResponse;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.net.ServerSocket;
-import java.net.URISyntaxException;
 import org.junit.Assert;
 import org.junit.Test;
-import utils.FileIoUtils;
 
 public class Spec3Test {
 
   @Test
-  public void ErrorPageTest() throws IOException, URISyntaxException {
+  public void ErrorPageTest() {
     /**
      * 403, 404, 500 오류를 처리합니다.
      * o 해당 오류 발생 시 적절한 HTML 을 반환합니다.

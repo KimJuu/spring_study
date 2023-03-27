@@ -51,7 +51,7 @@ public class HttpResponse {
             dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
             dos.writeBytes("\r\n");
         } catch (IOException e) {
-            logger.error(e.getMessage());
+            logger.error("response404Header IOException - ", e);
         }
     }
 
@@ -62,29 +62,16 @@ public class HttpResponse {
             dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
             dos.writeBytes("\r\n");
         } catch (IOException e) {
-            logger.error(e.getMessage());
+            logger.error("response500Header IOException - ", e);
         }
     }
-
-
-
-    public void sendRedirect(String redirectUrl) {
-        try {
-            dos.writeBytes("HTTP/1.1 302 Found \r\n");
-            dos.writeBytes("Location: " + redirectUrl);
-            dos.writeBytes("\r\n");
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
-    }
-
 
     private void responseBody(byte[] body) {
         try {
             dos.write(body, 0, body.length);
             dos.close();
         } catch (IOException e) {
-            logger.error(e.getMessage());
+            logger.error("responseBody IOException - ", e);
         }
     }
 
@@ -92,7 +79,7 @@ public class HttpResponse {
         Path requestedPath = Paths.get(hostName + requestURI).normalize();
         Path httpRootPath = Paths.get(hostName).normalize();
 
-        return !requestedPath.startsWith(httpRootPath) || requestedPath.toString().endsWith(".exe");
+        return !requestedPath.startsWith(httpRootPath) || requestedPath.toString().endsWith(".exe") || requestURI.contains("\\.\\.\\/");
     }
 
     public void forward(HttpRequest request) {
@@ -102,28 +89,29 @@ public class HttpResponse {
         String rootDirectory = Config.getHttpRoot(hostName);
         try {
             if(isForbidden(hostName, url)){
+                logger.error("403 ERROR : " + NON_STATIC_RESOURCE_PATH_PREFIX + Config.getErrorPage("403"));
                 byte[] body = FileIoUtils.loadFileFromClasspath(NON_STATIC_RESOURCE_PATH_PREFIX + Config.getErrorPage("403"));
-                response404Header(body.length);
+                response403Header(body.length);
                 responseBody(body);
                 return;
             }
 
             if("404".equals(Config.getUrlToHtml(url))){
-                logger.info("404 Config.getUrlToHtml(url)) : " + NON_STATIC_RESOURCE_PATH_PREFIX + Config.getErrorPage("404"));
+                logger.error("404 ERROR : " + NON_STATIC_RESOURCE_PATH_PREFIX + Config.getErrorPage("404"));
                 byte[] body = FileIoUtils.loadFileFromClasspath(NON_STATIC_RESOURCE_PATH_PREFIX + Config.getErrorPage("404"));
                 response404Header(body.length);
                 responseBody(body);
             }else{
-                logger.info("else 404 Config.getUrlToHtml(url)) : " + NON_STATIC_RESOURCE_PATH_PREFIX + rootDirectory + Config.getUrlToHtml(url));
+                logger.info("RETURN PAGE : " + NON_STATIC_RESOURCE_PATH_PREFIX + rootDirectory + Config.getUrlToHtml(url));
                 byte[] body = FileIoUtils.loadFileFromClasspath(NON_STATIC_RESOURCE_PATH_PREFIX + rootDirectory + Config.getUrlToHtml(url));
                 response200Header(body.length);
                 responseBody(body);
             }
 
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("forward IOException error",e);
         } catch (URISyntaxException e) {
-            e.printStackTrace();
+            logger.error("forward URISyntaxException error", e);
         }
     }
 }

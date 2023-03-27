@@ -30,7 +30,7 @@ public class RequestLine {
   }
 
   public static RequestLine parse(String requestLine) {
-    logger.info("bufferedReader : " + requestLine);
+    logger.info("requestLine : " + requestLine);
     String[] requestLineToken = requestLine.split(SPACE_DELIMITER);
     String[] urlToken = requestLineToken[URL_INDEX].split(QUESTION_DELIMITER);
 

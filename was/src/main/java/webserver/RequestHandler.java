@@ -28,8 +28,7 @@ public class RequestHandler implements Runnable {
   }
 
   public void run() {
-    logger.debug("New Client Connect! Connected IP : {}, Port : {}", connection.getInetAddress(),
-        connection.getPort());
+    logger.info("New Client Connect! Connected IP : {}, Port : {}", connection.getInetAddress(), connection.getPort());
 
     try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
       BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in));
@@ -40,15 +39,15 @@ public class RequestHandler implements Runnable {
       if (requestLine.isPost()) {
         requestBody = IOUtils.readData(bufferedReader, requestHeader.getContentLength());
       }
-
       HttpRequest httpRequest = new HttpRequest(requestLine, requestHeader, requestBody);
+      logger.info("REQUEST PARAMETER : ", httpRequest.getParameters().toString());
       HttpResponse httpResponse = new HttpResponse(new DataOutputStream(out));
 
       SimpleServlet servlet = ServletMapping.getServlet(httpRequest.getPath());
       servlet.service(httpRequest, httpResponse);
 
     } catch (IOException e) {
-      logger.error(e.getMessage());
+      logger.error("RequestHandler IOException error",e);
     }
   }
 

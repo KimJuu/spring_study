@@ -9,7 +9,6 @@ import org.slf4j.LoggerFactory;
 public class FileIoUtils {
   private static Logger logger = LoggerFactory.getLogger(FileIoUtils.class);
   public static byte[] loadFileFromClasspath(String filePath) throws IOException, URISyntaxException {
-    logger.info("filePath : " + filePath);
     InputStream resourceAsStream = FileIoUtils.class.getResourceAsStream(filePath);
     return resourceAsStream.readAllBytes();
   }
