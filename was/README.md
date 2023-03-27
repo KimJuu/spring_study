@@ -36,6 +36,7 @@
 - logback.xml 에 RollingFileAppender 을 구현하여 로그 단위를 하루 단위로 분리.(logs/backup/error/error-%d{yyyy-MM-dd}.log)
 - ERROR, INFO 별 구현
 - 오류 발생 시 logger.error("에러 정의 ", e); 형태로 구현하여 StackTrace 전체를 로그파일에 남김.
+- TEST URL : a.com:8000/Hellonotfound
 ###6. 간단한 WAS 를 구현합니다.
    o 다음과 같은 SimpleServlet 구현체가 동작해야 합니다.<br>
    ▪ 다음 코드에서 SimpleServlet, HttpRequet, HttpResponse 인터페이스나<br>
